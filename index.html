@@ -574,24 +574,50 @@ function enterApp() {
   }, 600);
 }
 
+
 const MOVIES = [
+  // Romance / RomCom
   { id:1,  title:"La La Land",                 year:2016, emoji:"🎭", genre:"Romance",  bg:"#3d1a2a" },
-  { id:2,  title:"Interstellar",                year:2014, emoji:"🚀", genre:"Sci-Fi",   bg:"#0d1f3c" },
-  { id:3,  title:"The Notebook",                year:2004, emoji:"💌", genre:"Romance",  bg:"#3d1a2a" },
-  { id:4,  title:"Knives Out",                  year:2019, emoji:"🔪", genre:"Mystery",  bg:"#1a1a1a" },
-  { id:5,  title:"Parasite",                    year:2019, emoji:"🏚️",  genre:"Drama",    bg:"#1a2a1a" },
-  { id:6,  title:"Grand Budapest Hotel",        year:2014, emoji:"🏨", genre:"Comedy",   bg:"#3a2a10" },
-  { id:7,  title:"Eternal Sunshine",            year:2004, emoji:"☀️",  genre:"Romance",  bg:"#3d1a2a" },
-  { id:8,  title:"Get Out",                     year:2017, emoji:"👁️",  genre:"Horror",   bg:"#1a0a0a" },
-  { id:9,  title:"The Princess Bride",          year:1987, emoji:"⚔️",  genre:"Fantasy",  bg:"#1a2a1a" },
-  { id:10, title:"Amélie",                      year:2001, emoji:"🎪", genre:"Romance",  bg:"#3d1a2a" },
-  { id:11, title:"Everything Everywhere",       year:2022, emoji:"🌌", genre:"Sci-Fi",   bg:"#0d1f3c" },
-  { id:12, title:"When Harry Met Sally",        year:1989, emoji:"🥂", genre:"Comedy",   bg:"#2a1a10" },
-  { id:13, title:"Clueless",                    year:1995, emoji:"👛", genre:"Comedy",   bg:"#2a1a2a" },
-  { id:14, title:"Pride & Prejudice",           year:2005, emoji:"🌹", genre:"Romance",  bg:"#3d1a2a" },
-  { id:15, title:"Inception",                   year:2010, emoji:"🌀", genre:"Sci-Fi",   bg:"#0d1f3c" },
-  { id:16, title:"10 Things I Hate About You", year:1999, emoji:"💘", genre:"Romance",  bg:"#3d1a2a" },
-];
+  { id:2,  title:"The Notebook",                year:2004, emoji:"💌", genre:"Romance",  bg:"#3d1a2a" },
+  { id:3,  title:"Crazy Rich Asians",           year:2018, emoji:"💍", genre:"Romance",  bg:"#3d1a2a" },
+  { id:4,  title:"Pride & Prejudice",           year:2005, emoji:"🌹", genre:"Romance",  bg:"#3d1a2a" },
+  { id:5,  title:"10 Things I Hate About You",  year:1999, emoji:"💘", genre:"Romance",  bg:"#3d1a2a" },
+  { id:6,  title:"Amélie",                      year:2001, emoji:"🎪", genre:"Romance",  bg:"#3d1a2a" },
+  { id:7,  title:"About Time",                  year:2013, emoji:"⏳", genre:"Romance",  bg:"#3d1a2a" },
+  { id:8,  title:"The Proposal",                year:2009, emoji:"💐", genre:"Romance",  bg:"#3d1a2a" },
+  { id:9,  title:"Eternal Sunshine",            year:2004, emoji:"☀️",  genre:"Romance",  bg:"#3d1a2a" },
+  { id:10, title:"To All the Boys I Loved",     year:2018, emoji:"💌", genre:"Romance",  bg:"#3d1a2a" },
+
+  // Action
+  { id:11, title:"Mad Max: Fury Road",          year:2015, emoji:"🔥", genre:"Action",   bg:"#2a1500" },
+  { id:12, title:"John Wick",                   year:2014, emoji:"🔫", genre:"Action",   bg:"#0a0a0a" },
+  { id:13, title:"Top Gun: Maverick",           year:2022, emoji:"✈️",  genre:"Action",   bg:"#0d1f3c" },
+  { id:14, title:"Mission Impossible",          year:2018, emoji:"🕵️",  genre:"Action",   bg:"#1a1a2a" },
+  { id:15, title:"The Dark Knight",             year:2008, emoji:"🦇", genre:"Action",   bg:"#0a0a0a" },
+  { id:16, title:"Gladiator",                   year:2000, emoji:"⚔️",  genre:"Action",   bg:"#2a1500" },
+  { id:17, title:"Spider-Man: No Way Home",     year:2021, emoji:"🕷️",  genre:"Action",   bg:"#0d1f3c" },
+  { id:18, title:"Interstellar",                year:2014, emoji:"🚀", genre:"Action",   bg:"#0d1f3c" },
+
+  // Detective / Mystery
+  { id:19, title:"Knives Out",                  year:2019, emoji:"🔪", genre:"Mystery",  bg:"#1a1a1a" },
+  { id:20, title:"Gone Girl",                   year:2014, emoji:"🕵️",  genre:"Mystery",  bg:"#1a1a1a" },
+  { id:21, title:"Se7en",                       year:1995, emoji:"📦", genre:"Mystery",  bg:"#0f0f0f" },
+  { id:22, title:"Sherlock Holmes",             year:2009, emoji:"🔍", genre:"Mystery",  bg:"#1a1500" },
+  { id:23, title:"Glass Onion",                 year:2022, emoji:"🔮", genre:"Mystery",  bg:"#1a1a1a" },
+  { id:24, title:"Zodiac",                      year:2007, emoji:"🔦", genre:"Mystery",  bg:"#0f0f0f" },
+  { id:25, title:"The Girl with the Dragon Tattoo", year:2011, emoji:"🐉", genre:"Mystery", bg:"#0f0f0f" },
+  { id:26, title:"Parasite",                    year:2019, emoji:"🏚️",  genre:"Mystery",  bg:"#1a2a1a" },
+
+  // Comedy
+  { id:27, title:"The Grand Budapest Hotel",    year:2014, emoji:"🏨", genre:"Comedy",   bg:"#3a2a10" },
+  { id:28, title:"Game Night",                  year:2018, emoji:"🎲", genre:"Comedy",   bg:"#1a2a1a" },
+  { id:29, title:"Superbad",                    year:2007, emoji:"🍕", genre:"Comedy",   bg:"#2a1a00" },
+  { id:30, title:"The Hangover",                year:2009, emoji:"🥴", genre:"Comedy",   bg:"#2a1a00" },
+  { id:31, title:"Bridesmaids",                 year:2011, emoji:"💒", genre:"Comedy",   bg:"#2a1a2a" },
+  { id:32, title:"Mean Girls",                  year:2004, emoji:"👑", genre:"Comedy",   bg:"#2a1a2a" },
+  { id:33, title:"When Harry Met Sally",        year:1989, emoji:"🥂", genre:"Comedy",   bg:"#2a1a10" },
+  { id:34, title:"Clueless",                    year:1995, emoji:"👛", genre:"Comedy",   bg:"#2a1a2a" },
+];];
 
 const MOODS = [
   { name:"Date night",     emoji:"🕯️", desc:"Romantic & tender",   genres:["Romance"] },
