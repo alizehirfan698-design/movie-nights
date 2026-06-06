@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Our Movie Nights 🎬</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #D4537E;
+    --pink-light: #FBEAF0;
+    --pink-border: #ED93B1;
+    --bg: #0e0b14;
+    --surface: #1a1525;
+    --surface2: #231d32;
+    --border: rgba(212,83,126,0.2);
+    --text: #f0eaf5;
+    --muted: #9b8faa;
+    --star: #FAC775;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 10%, rgba(212,83,126,0.08) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 80%, rgba(83,74,183,0.08) 0%, transparent 60%);
+  }
+
+  /* ── WELCOME CARD ── */
+  #welcome-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .welcome-card {
+    max-width: 520px;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid rgba(212,83,126,0.35);
+    border-radius: 28px;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .welcome-hearts {
+    font-size: 28px;
+    letter-spacing: 6px;
+    margin-bottom: 1.2rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.08); }
+  }
+
+  .welcome-names {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .welcome-names span { color: var(--pink); }
+
+  .welcome-since {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 1.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .welcome-divider {
+    width: 48px;
+    height: 1px;
+    background: var(--pink);
+    margin: 0 auto 1.6rem;
+    opacity: 0.5;
+  }
+
+  .welcome-para {
+    font-size: 15px;
+    line-height: 1.85;
+    color: #c9bdd6;
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+
+  .welcome-para em {
+    color: var(--pink);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  /* Photo frame */
+  .photo-frame {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto 2rem;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 2px solid rgba(212,83,126,0.3);
+    position: relative;
+    background: var(--surface2);
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .photo-placeholder span { font-size: 40px; }
+
+  .photo-caption {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: -1.2rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .enter-btn {
+    display: inline-block;
+    padding: 14px 44px;
+    background: var(--pink);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  .enter-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(212,83,126,0.35);
+  }
+
+  /* ── MAIN APP (hidden until enter) ── */
+  #app { display: none; }
+
+  header {
+    text-align: center;
+    padding: 3rem 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  header h1 span { color: var(--pink); }
+  header p { margin-top: 0.5rem; color: var(--muted); font-size: 0.95rem; }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  nav button {
+    padding: 8px 20px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: none;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  nav button:hover { color: var(--text); border-color: var(--border); }
+  nav button.active { background: var(--pink); color: #fff; border-color: transparent; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .search-row { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+
+  .search-row input {
+    flex: 1;
+    padding: 10px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-row input:focus { border-color: var(--pink-border); }
+  .search-row input::placeholder { color: var(--muted); }
+
+  .movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
+
+  .movie-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .movie-card:hover { transform: translateY(-3px); border-color: var(--pink-border); }
+  .movie-card.in-list { border-color: var(--pink); }
+
+  .poster {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+    position: relative;
+  }
+
+  .poster-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .movie-card:hover .poster-overlay { display: flex; }
+
+  .add-btn {
+    background: var(--pink);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s;
+  }
+
+  .add-btn:hover { transform: scale(1.1); }
+
+  .in-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--pink);
+    color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 13px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .movie-card.in-list .in-badge { display: flex; }
+
+  .movie-info { padding: 10px 12px 12px; }
+  .movie-title { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+  .movie-meta { font-size: 12px; color: var(--muted); }
+
+  .genre-pill {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .wl-empty { text-align: center; padding: 4rem; color: var(--muted); font-size: 15px; }
+  .wl-empty .big { font-size: 48px; display: block; margin-bottom: 12px; }
+  .wl-summary { font-size: 13px; color: var(--muted); margin-bottom: 1rem; }
+
+  .wl-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 8px;
+  }
+
+  .wl-item.watched-item { opacity: 0.55; }
+  .wl-emoji { font-size: 34px; flex-shrink: 0; width: 44px; text-align: center; }
+  .wl-info { flex: 1; min-width: 0; }
+  .wl-name { font-size: 14px; font-weight: 500; }
+  .wl-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .wl-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .btn-sm:hover { border-color: var(--pink-border); color: var(--pink); }
+  .btn-sm.done { background: rgba(212,83,126,0.15); border-color: var(--pink); color: var(--pink); }
+  .btn-sm.danger:hover { border-color: #E24B4A; color: #E24B4A; }
+
+  .stars { display: flex; gap: 2px; margin-top: 4px; }
+  .star { font-size: 14px; cursor: pointer; color: var(--muted); transition: color 0.1s; }
+  .star.lit { color: var(--star); }
+
+  .notes-area { margin-top: 0.5rem; }
+  .notes-area textarea {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    resize: none;
+    height: 56px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .notes-area textarea:focus { border-color: var(--pink-border); }
+  .notes-area textarea::placeholder { color: var(--muted); }
+
+  .mood-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .mood-card {
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+
+  .mood-card:hover { border-color: var(--pink-border); background: var(--surface2); }
+  .mood-card.selected { border-color: var(--pink); background: rgba(212,83,126,0.08); }
+
+  .mood-emoji { font-size: 32px; margin-bottom: 8px; }
+  .mood-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .mood-desc { font-size: 12px; color: var(--muted); }
+
+  .mood-picks h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .pick-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--surface);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .pick-e { font-size: 24px; }
+  .pick-name { font-size: 14px; font-weight: 500; }
+  .pick-year { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+  .spin-wrap { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+  .spin-note { color: var(--muted); font-size: 14px; text-align: center; }
+  .wheel-container { position: relative; width: 280px; height: 280px; }
+
+  .wheel-pointer {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    z-index: 3;
+  }
+
+  canvas { border-radius: 50%; display: block; }
+
+  .spin-btn {
+    padding: 14px 40px;
+    background: var(--pink);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+
+  .spin-btn:hover { transform: scale(1.04); }
+  .spin-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .spin-result {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    text-align: center;
+    min-height: 32px;
+  }
+
+  .spin-sub { font-size: 13px; color: var(--muted); text-align: center; min-height: 20px; }
+
+  @media (max-width: 480px) {
+    .movies-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    .wl-actions { flex-direction: column; gap: 4px; }
+    .welcome-card { padding: 2rem 1.25rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── WELCOME SCREEN ── -->
+<div id="welcome-screen">
+  <div class="welcome-card">
+    <div class="welcome-hearts">🤍 🎬 🤍</div>
+    <h1 class="welcome-names"><span>Alizeh</span> & <span>Abdullah Omer</span></h1>
+    <p class="welcome-since">our little corner of the internet ✨</p>
+    <div class="welcome-divider"></div>
+
+    <p class="welcome-para">
+      Some people find each other — and then there are people like <em>Alizeh and Abdullah Omer</em>,
+      who found something rarer: a rhythm that's entirely their own. This little page was made for
+      the nights when the world outside goes quiet and the only thing that matters is finding the
+      perfect movie, curled up together, deciding between something that'll make you laugh until
+      your stomach hurts or something that'll make you hold each other a little tighter.
+      Every film you add here, every star you give, every note you leave — it's a small chapter
+      in a story that's still being written. Here's to <em>every movie night</em>, every rewatch,
+      every "just one more episode" at 2am. This one's yours. 🎞️
+    </p>
+
+    <!-- Replace 'your-photo.jpg' with your actual image filename after uploading to GitHub -->
+    <div class="photo-frame">
+      <!-- OPTION A: once you upload your photo to GitHub, replace the line below -->
+      <!-- <img src="your-photo.jpg" alt="Alizeh and Abdullah Omer" /> -->
+
+      <!-- OPTION B: this placeholder shows until you add your photo -->
+      <div class="photo-placeholder">
+        <span>📸</span>
+        <p>your photo goes here</p>
+        <p style="font-size:11px;margin-top:4px;">upload your pic to GitHub<br>then swap this with an &lt;img&gt; tag</p>
+      </div>
+    </div>
+
+    <p class="photo-caption">Alizeh & Abdullah Omer 🤍</p>
+
+    <button class="enter-btn" onclick="enterApp()">enter our space →</button>
+  </div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app">
+  <header>
+    <h1>our <span>movie nights</span> 🎬</h1>
+    <p>something special for my special person 💕</p>
+  </header>
+
+  <nav>
+    <button class="active" onclick="tab('browse')">🔍 Browse</button>
+    <button onclick="tab('watchlist')">📌 Watchlist <span id="wl-count-nav"></span></button>
+    <button onclick="tab('mood')">✨ Mood</button>
+    <button onclick="tab('spin')">🎡 Pick for us</button>
+  </nav>
+
+  <main>
+    <div id="tab-browse" class="section active">
+      <div class="search-row">
+        <input type="text" id="search" placeholder="Search by title or genre…" oninput="filterMovies()" />
+      </div>
+      <div class="movies-grid" id="grid"></div>
+    </div>
+
+    <div id="tab-watchlist" class="section">
+      <div id="wl-body"></div>
+    </div>
+
+    <div id="tab-mood" class="section">
+      <div class="mood-grid" id="mood-grid"></div>
+      <div id="mood-picks"></div>
+    </div>
+
+    <div id="tab-spin" class="section">
+      <div class="spin-wrap">
+        <p class="spin-note">Can't agree on what to watch? Let fate decide! 🎲</p>
+        <div class="wheel-container">
+          <div class="wheel-pointer">▼</div>
+          <canvas id="wheel" width="280" height="280"></canvas>
+        </div>
+        <button class="spin-btn" id="spin-btn" onclick="spin()">Spin!</button>
+        <div class="spin-result" id="spin-result"></div>
+        <div class="spin-sub" id="spin-sub"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function enterApp() {
+  const ws = document.getElementById('welcome-screen');
+  ws.style.transition = 'opacity 0.6s ease';
+  ws.style.opacity = '0';
+  setTimeout(() => {
+    ws.style.display = 'none';
+    const app = document.getElementById('app');
+    app.style.display = 'block';
+    app.style.opacity = '0';
+    app.style.transition = 'opacity 0.6s ease';
+    setTimeout(() => { app.style.opacity = '1'; }, 30);
+  }, 600);
+}
+
+const MOVIES = [
+  { id:1,  title:"La La Land",                 year:2016, emoji:"🎭", genre:"Romance",  bg:"#3d1a2a" },
+  { id:2,  title:"Interstellar",                year:2014, emoji:"🚀", genre:"Sci-Fi",   bg:"#0d1f3c" },
+  { id:3,  title:"The Notebook",                year:2004, emoji:"💌", genre:"Romance",  bg:"#3d1a2a" },
+  { id:4,  title:"Knives Out",                  year:2019, emoji:"🔪", genre:"Mystery",  bg:"#1a1a1a" },
+  { id:5,  title:"Parasite",                    year:2019, emoji:"🏚️",  genre:"Drama",    bg:"#1a2a1a" },
+  { id:6,  title:"Grand Budapest Hotel",        year:2014, emoji:"🏨", genre:"Comedy",   bg:"#3a2a10" },
+  { id:7,  title:"Eternal Sunshine",            year:2004, emoji:"☀️",  genre:"Romance",  bg:"#3d1a2a" },
+  { id:8,  title:"Get Out",                     year:2017, emoji:"👁️",  genre:"Horror",   bg:"#1a0a0a" },
+  { id:9,  title:"The Princess Bride",          year:1987, emoji:"⚔️",  genre:"Fantasy",  bg:"#1a2a1a" },
+  { id:10, title:"Amélie",                      year:2001, emoji:"🎪", genre:"Romance",  bg:"#3d1a2a" },
+  { id:11, title:"Everything Everywhere",       year:2022, emoji:"🌌", genre:"Sci-Fi",   bg:"#0d1f3c" },
+  { id:12, title:"When Harry Met Sally",        year:1989, emoji:"🥂", genre:"Comedy",   bg:"#2a1a10" },
+  { id:13, title:"Clueless",                    year:1995, emoji:"👛", genre:"Comedy",   bg:"#2a1a2a" },
+  { id:14, title:"Pride & Prejudice",           year:2005, emoji:"🌹", genre:"Romance",  bg:"#3d1a2a" },
+  { id:15, title:"Inception",                   year:2010, emoji:"🌀", genre:"Sci-Fi",   bg:"#0d1f3c" },
+  { id:16, title:"10 Things I Hate About You", year:1999, emoji:"💘", genre:"Romance",  bg:"#3d1a2a" },
+];
+
+const MOODS = [
+  { name:"Date night",     emoji:"🕯️", desc:"Romantic & tender",   genres:["Romance"] },
+  { name:"Laugh all night",emoji:"😂", desc:"Pure comedy",          genres:["Comedy"] },
+  { name:"Thriller mode",  emoji:"😰", desc:"Edge of your seat",    genres:["Horror","Mystery"] },
+  { name:"Mindbender",     emoji:"🤯", desc:"Sci-fi & fantasy",     genres:["Sci-Fi","Fantasy"] },
+  { name:"Art house",      emoji:"🎬", desc:"Deep & dramatic",      genres:["Drama"] },
+  { name:"Cozy night in",  emoji:"🛋️", desc:"Light & heartwarming", genres:["Comedy","Fantasy","Romance"] },
+];
+
+const WHEEL_COLORS = ["#D4537E","#534AB7","#1D9E75","#D85A30","#BA7517","#185FA5","#639922","#993556"];
+
+let watchlist = JSON.parse(localStorage.getItem('wl') || '[]');
+let spinAngle = 0;
+let spinning = false;
+
+function save() { localStorage.setItem('wl', JSON.stringify(watchlist)); }
+
+function tab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('nav button').forEach((b,i) => {
+    b.classList.toggle('active', ['browse','watchlist','mood','spin'][i] === name);
+  });
+  if(name === 'watchlist') renderWL();
+  if(name === 'spin') drawWheel();
+}
+
+function filterMovies() {
+  const q = document.getElementById('search').value.toLowerCase();
+  renderMovies(q ? MOVIES.filter(m => m.title.toLowerCase().includes(q) || m.genre.toLowerCase().includes(q)) : MOVIES);
+}
+
+function renderMovies(list) {
+  document.getElementById('grid').innerHTML = list.map(m => {
+    const inList = watchlist.find(w => w.id === m.id);
+    return `<div class="movie-card ${inList?'in-list':''}" id="mc${m.id}">
+      <div class="poster" style="background:${m.bg}">
+        ${m.emoji}
+        <div class="poster-overlay">
+          <button class="add-btn" onclick="toggleWL(${m.id})">${inList?'✓':'+'}</button>
+        </div>
+        <div class="in-badge">✓</div>
+      </div>
+      <div class="movie-info">
+        <div class="movie-title">${m.title}</div>
+        <div class="movie-meta">${m.year} · ${m.genre}</div>
+        <span class="genre-pill">${m.genre}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleWL(id) {
+  const m = MOVIES.find(x => x.id === id);
+  const idx = watchlist.findIndex(w => w.id === id);
+  if(idx === -1) watchlist.push({...m, watched:false, rating:0, note:''});
+  else watchlist.splice(idx, 1);
+  save(); updateNavCount(); filterMovies();
+  if(document.getElementById('tab-spin').classList.contains('active')) drawWheel();
+}
+
+function updateNavCount() {
+  const el = document.getElementById('wl-count-nav');
+  el.textContent = watchlist.length ? `(${watchlist.length})` : '';
+}
+
+function renderWL() {
+  const c = document.getElementById('wl-body');
+  if(!watchlist.length) {
+    c.innerHTML = `<div class="wl-empty"><span class="big">🎬</span>Your watchlist is empty.<br>Browse movies and add some!</div>`;
+    return;
+  }
+  const left = watchlist.filter(w => !w.watched).length;
+  c.innerHTML = `<div class="wl-summary">${watchlist.length} movie${watchlist.length!==1?'s':''} saved · ${left} left to watch</div>` +
+    watchlist.map(m => `
+    <div class="wl-item ${m.watched?'watched-item':''}" id="wli${m.id}">
+      <div class="wl-emoji">${m.emoji}</div>
+      <div class="wl-info">
+        <div class="wl-name">${m.title}</div>
+        <div class="wl-sub">${m.year} · ${m.genre}</div>
+        <div class="stars">${[1,2,3,4,5].map(s=>`<span class="star ${m.rating>=s?'lit':''}" onclick="rate(${m.id},${s})">★</span>`).join('')}</div>
+        <div class="notes-area"><textarea placeholder="Add a note… (e.g. 'watch on date night')" oninput="noteUpdate(${m.id},this.value)">${m.note||''}</textarea></div>
+      </div>
+      <div class="wl-actions">
+        <button class="btn-sm ${m.watched?'done':''}" onclick="markWatched(${m.id})">${m.watched?'✓ Watched':'Mark watched'}</button>
+        <button class="btn-sm danger" onclick="removeWL(${m.id})">Remove</button>
+      </div>
+    </div>`).join('');
+}
+
+function rate(id, r) {
+  const m = watchlist.find(w => w.id === id);
+  if(m) { m.rating = r; save(); renderWL(); }
+}
+
+function noteUpdate(id, val) {
+  const m = watchlist.find(w => w.id === id);
+  if(m) { m.note = val; save(); }
+}
+
+function markWatched(id) {
+  const m = watchlist.find(w => w.id === id);
+  if(m) { m.watched = !m.watched; save(); renderWL(); }
+}
+
+function removeWL(id) {
+  watchlist = watchlist.filter(w => w.id !== id);
+  save(); updateNavCount(); renderWL(); filterMovies();
+  if(document.getElementById('tab-spin').classList.contains('active')) drawWheel();
+}
+
+function renderMoods() {
+  document.getElementById('mood-grid').innerHTML = MOODS.map((m,i) =>
+    `<div class="mood-card" id="mood${i}" onclick="pickMood(${i})">
+      <div class="mood-emoji">${m.emoji}</div>
+      <div class="mood-name">${m.name}</div>
+      <div class="mood-desc">${m.desc}</div>
+    </div>`
+  ).join('');
+}
+
+function pickMood(i) {
+  document.querySelectorAll('.mood-card').forEach((c,j) => c.classList.toggle('selected', i===j));
+  const mood = MOODS[i];
+  const picks = MOVIES.filter(m => mood.genres.includes(m.genre)).slice(0,5);
+  document.getElementById('mood-picks').innerHTML = picks.length ?
+    `<div class="mood-picks"><h3>${mood.emoji} ${mood.name} picks</h3>` +
+    picks.map(m => `<div class="pick-row"><span class="pick-e">${m.emoji}</span><span class="pick-name">${m.title}</span><span class="pick-year">${m.year}</span></div>`).join('') + `</div>` : '';
+}
+
+function drawWheel() {
+  const canvas = document.getElementById('wheel');
+  const ctx = canvas.getContext('2d');
+  const items = watchlist.filter(w => !w.watched);
+  ctx.clearRect(0,0,280,280);
+  document.getElementById('spin-result').textContent = '';
+  document.getElementById('spin-sub').textContent = '';
+
+  if(!items.length) {
+    ctx.beginPath(); ctx.arc(140,140,138,0,2*Math.PI);
+    ctx.fillStyle = '#1a1525'; ctx.fill();
+    ctx.fillStyle = '#9b8faa'; ctx.font = '15px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Add movies first!', 140, 135);
+    ctx.fillText('📌 Go to Watchlist', 140, 158);
+    document.getElementById('spin-btn').disabled = true;
+    return;
+  }
+  document.getElementById('spin-btn').disabled = false;
+
+  const slice = (2*Math.PI) / items.length;
+  items.forEach((item, i) => {
+    const start = spinAngle + i * slice;
+    ctx.beginPath(); ctx.moveTo(140,140);
+    ctx.arc(140,140,138,start,start+slice); ctx.closePath();
+    ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length]; ctx.fill();
+    ctx.strokeStyle = '#0e0b14'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save(); ctx.translate(140,140); ctx.rotate(start + slice/2);
+    ctx.textAlign = 'right'; ctx.fillStyle = '#fff';
+    const fs = Math.min(14, 110/items.length*1.6);
+    ctx.font = `500 ${fs}px sans-serif`;
+    const label = item.title.length > 14 ? item.title.substring(0,13)+'…' : item.title;
+    ctx.fillText(label, 130, 4); ctx.restore();
+  });
+  ctx.beginPath(); ctx.arc(140,140,22,0,2*Math.PI);
+  ctx.fillStyle = '#0e0b14'; ctx.fill();
+  ctx.strokeStyle = '#D4537E'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#fff'; ctx.font = '18px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('🎬', 140, 147);
+}
+
+function spin() {
+  const items = watchlist.filter(w => !w.watched);
+  if(!items.length || spinning) return;
+  spinning = true;
+  document.getElementById('spin-btn').disabled = true;
+  document.getElementById('spin-result').textContent = '';
+  document.getElementById('spin-sub').textContent = '🎲 Spinning…';
+  const extra = Math.random() * 2 * Math.PI + Math.PI * (12 + Math.random() * 6);
+  const dur = 4000;
+  const t0 = performance.now();
+  const a0 = spinAngle;
+  function frame(now) {
+    const t = Math.min((now - t0) / dur, 1);
+    const ease = 1 - Math.pow(1-t, 4);
+    spinAngle = a0 + extra * ease;
+    drawWheelLive(items);
+    if(t < 1) { requestAnimationFrame(frame); return; }
+    spinning = false;
+    document.getElementById('spin-btn').disabled = false;
+    const slice = (2*Math.PI) / items.length;
+    const norm = (((-spinAngle + Math.PI * 1.5) % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+    const idx = Math.floor(norm / slice) % items.length;
+    const picked = items[idx];
+    document.getElementById('spin-result').textContent = `${picked.emoji} ${picked.title}`;
+    document.getElementById('spin-sub').textContent = `${picked.year} · ${picked.genre} — tonight's pick! 🎉`;
+  }
+  requestAnimationFrame(frame);
+}
+
+function drawWheelLive(items) {
+  const canvas = document.getElementById('wheel');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,280,280);
+  const slice = (2*Math.PI) / items.length;
+  items.forEach((item, i) => {
+    const start = spinAngle + i * slice;
+    ctx.beginPath(); ctx.moveTo(140,140);
+    ctx.arc(140,140,138,start,start+slice); ctx.closePath();
+    ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length]; ctx.fill();
+    ctx.strokeStyle = '#0e0b14'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save(); ctx.translate(140,140); ctx.rotate(start + slice/2);
+    ctx.textAlign = 'right'; ctx.fillStyle = '#fff';
+    const fs = Math.min(14, 110/items.length*1.6);
+    ctx.font = `500 ${fs}px sans-serif`;
+    const label = item.title.length > 14 ? item.title.substring(0,13)+'…' : item.title;
+    ctx.fillText(label, 130, 4); ctx.restore();
+  });
+  ctx.beginPath(); ctx.arc(140,140,22,0,2*Math.PI);
+  ctx.fillStyle = '#0e0b14'; ctx.fill();
+  ctx.strokeStyle = '#D4537E'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#fff'; ctx.font = '18px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('🎬', 140, 147);
+}
+
+renderMovies(MOVIES);
+renderMoods();
+updateNavCount();
+</script>
+</body>
+</html>
